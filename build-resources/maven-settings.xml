@@ -1,0 +1,32 @@
+<settings xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                             
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <profiles>
+    <profile>
+      <id>vro-plugin-dev</id>
+      <repositories>
+        <repository>
+          <id>archetype</id>
+          <url>https://10.110.222.42:8281/vco-repo/archetype-catalog.xml</url>
+          <releases>
+            <enabled>true</enabled>
+            <checksumPolicy>fail</checksumPolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <checksumPolicy>warn</checksumPolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+
+  <!--localRepository>/dbc/blr-dbc304/mtiwari/work/.m2</localRepository-->
+
+  <activeProfiles>
+    <activeProfile>vro-plugin-dev</activeProfile>
+  </activeProfiles>
+
+</settings>
