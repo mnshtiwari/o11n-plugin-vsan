@@ -1,0 +1,16 @@
+target/
+.idea/
+*.iml
+*.iws
+*.iml
+.settings/
+.project
+.classpath
+build/
+/temp
+.DS_Store
+/o11nplugin-vsan/src/main/dar/VSO-INF/vso.xml
+o11nplugin-vsan-core/generated/vso.xml
+o11nplugin-vsan-core/generated/EnumerationFinders.java
+o11nplugin-vsan-package/src/main/resources/META-INF/history
+

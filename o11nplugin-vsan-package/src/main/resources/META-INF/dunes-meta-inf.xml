@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>127.0.0.1:8230</comment>
+<entry key="pkg-description">Vsan package</entry>
+<entry key="pkg-name">com.vmware.o11n.plugin.vsan</entry>
+<entry key="used-plugins">Vsan#1.0.0-SNAPSHOT</entry>
+<entry key="pkg-owner">My Company</entry>
+<entry key="pkg-id">4452345677834623546672675658267565818</entry>
+</properties>
