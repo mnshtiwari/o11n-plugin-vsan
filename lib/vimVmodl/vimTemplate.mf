@@ -1,0 +1,10 @@
+Bundle-ManifestVersion: 2
+Bundle-Vendor: VMware Inc.
+Bundle-Name: Vlsi bindings for VIM VMODL
+Bundle-SymbolicName: com.vmware.vim.vmodl
+Bundle-Version: 1.0.0
+Export-Package: com.vmware.vim.binding.vim.version
+Import-Package: com.vmware.vim.binding.vmodl.version,
+ com.vmware.vim.binding.vmodl.query.version
+Require-Bundle: com.vmware.vmodl.reflect
+ 

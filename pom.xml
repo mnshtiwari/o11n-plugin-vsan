@@ -60,11 +60,12 @@
             </plugins>
         </pluginManagement>
     </build>
-<modules>
-    <module>o11nplugin-vsan-core</module>
-  <module>o11nplugin-vsan-custom</module>
-  <module>o11nplugin-vsan-gen</module>
-  <module>o11nplugin-vsan-package</module>
-  <module>o11nplugin-vsan</module>
-  </modules>
+
+    <modules>
+        <module>o11nplugin-vsan-core</module>
+        <module>o11nplugin-vsan-custom</module>
+        <module>o11nplugin-vsan-gen</module>
+        <module>o11nplugin-vsan-package</module>
+        <module>o11nplugin-vsan</module>
+    </modules>
 </project>
