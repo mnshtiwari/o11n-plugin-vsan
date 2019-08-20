@@ -108,7 +108,7 @@
                                 <!--
                                 Pin the version of the emitted bindings, we want to bump vimbase without nessesarily introduce a new version
                                   -->
-                                <option>ver-target=vim.version.version11</option>
+                                <option>ver-target=vim.version.version14</option>
 
                                 <option>versions-vmodl=vim</option>
                                 <option>versions-release=internal</option>
@@ -142,9 +142,9 @@
                             <outputDirectory>${project.build.directory}/${source.directory.name}</outputDirectory>
                             <resourceTargetPath>${project.build.directory}/resources</resourceTargetPath>
                             <includes>
-                                <include>vim/**/*.java</include>
                                 <include>java/**/*.java</include>
                                 <include>java/**/**/*.java</include>
+                                <include>vim/**/*.java</include>
                                 <include>vmodl/package-info.java</include>
                                 <include>vmodl/DataObject.java</include>
                                 <include>vmodl/DynamicArray.java</include>
