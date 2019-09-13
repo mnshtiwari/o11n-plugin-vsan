@@ -28,6 +28,8 @@
     <modules>
         <module>vimVersions</module>
         <module>vimVmodl</module>
+        <module>vsanVersions</module>
+        <module>vsanVmodl</module>
     </modules>
     <build>
         <plugins>
