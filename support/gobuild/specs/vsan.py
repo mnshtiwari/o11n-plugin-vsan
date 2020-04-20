@@ -21,35 +21,12 @@ CIS_FILES = {
 CIS_BRANCH = 'vmkernel-main'
 CIS_CLN = 4095730
 
-VIMBASE_BRANCH = 'vsphere67u2'
-VIMBASE_CLN = 6839609
-VIMBASE_BUILDTYPE = 'release'
-VIMBASE_HOSTTYPES = {
-    'linux': 'linux64',
-    'linux64': 'linux64',
-    'windows': 'windows-2016-vs2013-U5',
-    'windows-2008': 'windows-2016-vs2013-U5',
-}
-
-esxVsanhealthFiles = [r'publish/vsanmgmt-public/java/*',]
-ESX_VSANHEALTH_FILES = {
-    'linux64': esxVsanhealthFiles,
-    'linux': esxVsanhealthFiles,
-    'windows': esxVsanhealthFiles,
-    'windows-2008': esxVsanhealthFiles,
-}
-ESX_VSANHEALTH_BRANCH = 'vsan67-patch-sdk'
-ESX_VSANHEALTH_CLN = 6443945
-ESX_VSANHEALTH_BUILDTYPE = 'release'
-
-VLSI_BRANCH = 'vsphere67u2'
+VLSI_BRANCH = 'main'
 VLSI_BUILDTYPE = 'release'
-VLSI_CLN = 6839609
+VLSI_CLN = 7684368
 VLSI_HOSTTYPES = {
-    'linux': 'linux64',
-    'linux64': 'linux64',
-    'windows': 'windows-2008',
-    'windows-2008': 'windows-2008',
+    'linux': 'linux-centos72-gc32-fw',
+    'linux64': 'linux-centos72-gc32-fw',
 }
 
 RDIDENTITYSERVER_BRANCH = 'vmkernel-main'

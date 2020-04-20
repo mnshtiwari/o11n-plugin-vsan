@@ -89,20 +89,6 @@ class vSAN(helpers.target.Target, helpers.maven.MavenHelper):
            'files': specs.vsan.CIS_FILES,
         }
 
-        comps['vimbase'] = {
-            'branch':    specs.vsan.VIMBASE_BRANCH,
-            'change':    specs.vsan.VIMBASE_CLN,
-            'hosttypes': specs.vsan.VIMBASE_HOSTTYPES,
-            'buildtype': specs.vsan.VIMBASE_BUILDTYPE,
-        }
-        
-        comps['esx-vsanhealth'] = {
-	    'branch':    specs.vsan.ESX_VSANHEALTH_BRANCH,
-	    'change':    specs.vsan.ESX_VSANHEALTH_CLN,
-	    'files': specs.vsan.ESX_VSANHEALTH_FILES,
-	    'buildtype': specs.vsan.ESX_VSANHEALTH_BUILDTYPE,
-        }
-
         comps['vlsi'] = {
             'branch':    specs.vsan.VLSI_BRANCH,
             'change':    specs.vsan.VLSI_CLN,

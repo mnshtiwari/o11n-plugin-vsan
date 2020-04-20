@@ -61,6 +61,46 @@
                         <artifactId>o11nplugin-vsan-custom</artifactId>
                         <version>${project.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>com.vmware.vlsi</groupId>
+                        <artifactId>vim-vmodl</artifactId>
+                        <version>${vlsi.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.vmware.vlsi</groupId>
+                        <artifactId>vsan-vmodl</artifactId>
+                        <version>${vlsi.version}</version>
+                    </dependency>
+                    <dependency>
+			         <groupId>com.vmware.vlsi</groupId>
+			         <artifactId>emitter</artifactId>
+			         <version>${vlsi.version}</version>
+			      </dependency>
+			      <dependency>
+			         <groupId>com.vmware.vlsi</groupId>
+			         <artifactId>emitter-vmodl</artifactId>
+			         <version>${vlsi.version}</version>
+			      </dependency>
+			      <dependency>
+			         <groupId>com.vmware.vlsi</groupId>
+			         <artifactId>vlsi-core</artifactId>
+			         <version>${vlsi.version}</version>
+			      </dependency>
+			      <dependency>
+			         <groupId>com.vmware.vlsi</groupId>
+			         <artifactId>vlsi-client</artifactId>
+			         <version>${vlsi.version}</version>
+			      </dependency>
+			      <dependency>
+			         <groupId>com.vmware.vlsi</groupId>
+			         <artifactId>query-vmodl</artifactId>
+			         <version>${vlsi.version}</version>
+			      </dependency>
+			      <dependency>
+			         <groupId>com.vmware.vlsi</groupId>
+			         <artifactId>reflect-vmodl</artifactId>
+			         <version>${vlsi.version}</version>
+			      </dependency>
                 </dependencies>
             </plugin>
         </plugins>

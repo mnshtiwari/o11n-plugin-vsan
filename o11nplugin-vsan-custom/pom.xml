@@ -34,18 +34,14 @@
             <type>pom</type>
         </dependency>
         <dependency>
-	    <groupId>vsan-vmodl-1.0</groupId>
-	    <artifactId>vsan-vmodl-1.0</artifactId>
-	    <scope>system</scope>
-	    <version>1.0</version>
-	    <systemPath>${basedir}/../lib/vsan-vmodl-1.0.jar</systemPath>
+	       <groupId>com.vmware.vlsi</groupId>
+	       <artifactId>vsan-vmodl</artifactId>
+	       <version>${vlsi.version}</version>
         </dependency>
         <dependency>
-            <groupId>vim-vmodl-1.0</groupId>
-            <artifactId>vim-vmodl-1.0</artifactId>
-            <scope>system</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}/../lib/vim-vmodl-1.0.jar</systemPath>
+            <groupId>com.vmware.vlsi</groupId>
+            <artifactId>vim-vmodl</artifactId>
+            <version>${vlsi.version}</version>
         </dependency>
     </dependencies>
 </project>
