@@ -30,5 +30,5 @@
         </property>
     </bean>
 
-    <bean class="com.vmware.o11n.plugin.vsan.VsanPluginFactory" id="pluginFactory" autowire-candidate="false" scope="prototype" />
+    <bean class="com.vmware.o11n.plugin.vsan.VsanPluginFactory" autowire-candidate="false" scope="prototype" />
 </beans>

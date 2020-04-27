@@ -63,7 +63,7 @@ public class ConnectionInfo {
    }
     
    public Sid getId() {
-      return Sid.valueOf(getHost());
+      return Sid.valueOf(getName());
    }
 
    @Override

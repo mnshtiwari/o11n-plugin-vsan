@@ -4,11 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.vmware.o11n.plugin.vsan.finder.VsanConnectionFinder;
-import com.vmware.o11n.plugin.vsan.model.ConnectionInfo;
-import com.vmware.o11n.plugin.vsan.model.VsanConnection;
+import com.vmware.o11n.plugin.vsan.model.Connection;
 import com.vmware.o11n.plugin.vsan.relator.RootHasConnections;
 import com.vmware.o11n.plugin.vsan.singleton.ConnectionManager;
-import com.vmware.o11n.sdk.modeldriven.ObjectFinder;
 import com.vmware.o11n.sdk.modeldrivengen.mapping.AbstractMapping;
 import com.vmware.o11n.sdk.modeldrivengen.mapping.MethodRenamePolicy;
 import com.vmware.o11n.sdk.modeldrivengen.mapping.WrapDescriptor;
@@ -20,6 +18,9 @@ import com.vmware.vim.vmomi.core.types.VmodlType;
 import com.vmware.vim.vmomi.core.types.VmodlType.Kind;
 import com.vmware.vim.vmomi.core.types.VmodlTypeMap;
 
+import com.vmware.vim.vsan.binding.vim.cluster.VsanCapability;
+import com.vmware.vim.vsan.binding.vim.cluster.VsanCapabilitySystem;
+
 public class CustomMapping extends AbstractMapping {
    private final MethodRenamePolicy renamer = new TaskMethodRenamer();
 
@@ -29,13 +30,14 @@ public class CustomMapping extends AbstractMapping {
     	
     	//convertWellKnownTypes();
     	
-    	singleton(ConnectionManager.class).as("VsanConnectionManager");;
+    	singleton(ConnectionManager.class);
     	
-    	wrap(VsanConnection.class).
+    	wrap(Connection.class).
          andFind().
          using(VsanConnectionFinder.class).
-         withIcon("connection.png");
-    	
+         withIcon("folder.png");
+
+    	/*
     	String vimPackage = "com.vmware.vim.binding.vim";
     	String vsanPackage = "com.vmware.vim.vsan.binding.vim";
     	String[] vmodlContextPackage = new String[] {vimPackage, vsanPackage};
@@ -59,7 +61,7 @@ public class CustomMapping extends AbstractMapping {
           }
           if (!excludeClasses.contains(clazz)) {
 
-              String sdkName= wsdlName;
+              String sdkName = wsdlName;
               if (type.getKind() == Kind.MANAGED_OBJECT
                     || type.getKind() == Kind.DATA_OBJECT
                     || type.getKind() == Kind.FAULT) {
@@ -76,27 +78,32 @@ public class CustomMapping extends AbstractMapping {
                   // reflectively customize the wrapping
                   customizer.tryCustomize(wrapper, clazz);
               } else if (type.getKind() == Kind.ENUM) {
-                  //enumerate((Class<Enum>) clazz).as(sdkName);
+                  enumerate((Class<Enum>) clazz).as(sdkName);
               }
 
           }
-      }
+      }*/
 
+    	WrapperCustomizer customizer = new WrapperCustomizer(this);
+    	WrapDescriptor<?> wrapper1 = wrap(VsanCapability.class).as("VsanCapability").rename(renamer);
+      customizer.tryCustomize(wrapper1, VsanCapability.class);
+      WrapDescriptor<?> wrapper2 = wrap(VsanCapabilitySystem.class).as("VsanCapabilitySystem").rename(renamer);
+      customizer.tryCustomize(wrapper2, VsanCapabilitySystem.class);
       include(ManagedObjectReference.class);
-    	
-    	//wrap(ManagedObjectReference.class);
-    	//wrap(VsanVcClusterConfigSystem.class);
-    	//wrap(VsanClusterConfig.class);
-    	
+
     	relateRoot().
-         to(VsanConnection.class).
+         to(Connection.class).
          using(RootHasConnections.class).
          as("connections");
     }
     
-   public static Class loadClass(TypeName typeName) {
+   public static Class<?> loadClass(TypeName typeName) {
+      return loadClass(typeName.getName());
+   }
+   
+   public static Class<?> loadClass(String className) {
       try {
-         return Class.forName(typeName.getName());
+         return Class.forName(className);
       } catch (ClassNotFoundException e) {
          throw new AssertionError(e);
       }

@@ -15,19 +15,19 @@ import com.vmware.o11n.plugin.vsan.connect.VsanConnectionUtil;
 import com.vmware.o11n.sdk.modeldriven.Findable;
 import com.vmware.o11n.sdk.modeldriven.Sid;
 import com.vmware.vim.vmomi.client.Client;
-import com.vmware.vim.vsan.binding.vim.cluster.VsanVcClusterConfigSystem;
+//import com.vmware.vim.vsan.binding.vim.cluster.VsanVcClusterConfigSystem;
 import com.vmware.vim.vsan.binding.vim.cluster.VsanCapabilitySystem;
 
 @Component
 @Qualifier(value = "connection")
 @Scope(value = "prototype")
-public class VsanConnection implements Findable  {
+public class Connection implements Findable  {
    
-   private static final Logger logger = LoggerFactory.getLogger(VsanConnection.class);
+   private static final Logger logger = LoggerFactory.getLogger(Connection.class);
    private volatile Client vmomiClient;
    private ConnectionInfo connectionInfo;
 
-   public VsanConnection(ConnectionInfo connectionInfo) {
+   public Connection(ConnectionInfo connectionInfo) {
       init(connectionInfo);
    }
    
@@ -56,10 +56,6 @@ public class VsanConnection implements Findable  {
    
    public String getUsername() {
       return getConnectionInfo().getUsername();
-   }
-   
-   public String getSslThumbPrint() {
-      return getConnectionInfo().getSslThumbPrint();
    }
 
    public synchronized ConnectionInfo getConnectionInfo() {
@@ -93,7 +89,7 @@ public class VsanConnection implements Findable  {
       if (vmomiClient == null) {
          vmomiClient = VsanConnectionUtil.createVsanClient(
                getHost(), String.valueOf(getPort()),
-               getSslThumbPrint(), getUsername(),
+               getConnectionInfo().getSslThumbPrint(), getUsername(),
                getConnectionInfo().getPassword());
       }
       return vmomiClient;
@@ -103,12 +99,13 @@ public class VsanConnection implements Findable  {
        return connectionInfo.toString();
    }
    
+   /*
    public VsanVcClusterConfigSystem getVsanVcClusterConfigSystem() {
       logger.info("Creating stub for cluster config system");
       return getVsanVmomiClient().createStub(
             VsanVcClusterConfigSystem.class,
             "vsan-cluster-config-system");
-   }
+   }*/
    
    public VsanCapabilitySystem getVsanCapabilitySystem() {
       logger.info("Creating stub for capability system");

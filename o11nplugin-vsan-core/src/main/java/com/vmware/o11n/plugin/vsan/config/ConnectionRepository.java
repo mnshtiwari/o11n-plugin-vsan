@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import com.vmware.o11n.plugin.vsan.model.VsanConnection;
+import com.vmware.o11n.plugin.vsan.model.Connection;
 import com.vmware.o11n.plugin.vsan.model.ConnectionInfo;
 import com.vmware.o11n.sdk.modeldriven.Sid;
 
@@ -29,24 +29,24 @@ public class ConnectionRepository implements ApplicationContextAware, Initializi
     /*
      * The local map (cache) of live connections
      */
-    private final Map<Sid, VsanConnection> connections;
+    private final Map<Sid, Connection> connections;
 
     public ConnectionRepository() {
-        connections = new ConcurrentHashMap<Sid, VsanConnection>();
+        connections = new ConcurrentHashMap<Sid, Connection>();
     }
 
     /**
      * Returns a live connection by its ID or null if no such connection has
-     * been initialised by this ID
+     * been initialized by this ID
      */
-    public VsanConnection findLiveConnection(Sid anyId) {
+    public Connection findLiveConnection(Sid anyId) {
         return connections.get(anyId.getId());
     }
 
     /**
      * Returns all live connections from the local cache
      */
-    public Collection<VsanConnection> findAll() {
+    public Collection<Connection> findAll() {
         return connections.values();
     }
 
@@ -70,16 +70,16 @@ public class ConnectionRepository implements ApplicationContextAware, Initializi
         // in the Persister
         persister.addChangeListener(this);
 
-        // Initialising the Persister. By doing that, the persister will invoke
+        // Initializing the Persister. By doing that, the persister will invoke
         // the connectionUpdated() method
         // and since we are subscribed to those events, the local cache will be
         // populated with all the available connections.
         persister.load();
     }
 
-    private VsanConnection createConnection(ConnectionInfo info) {
+    private Connection createConnection(ConnectionInfo info) {
         // This call will create a new spring-managed bean from the context
-        return (VsanConnection) context.getBean("connection", info);
+        return (Connection) context.getBean("connection", info);
     }
 
     /*
@@ -88,7 +88,7 @@ public class ConnectionRepository implements ApplicationContextAware, Initializi
      */
     @Override
     public void connectionUpdated(ConnectionInfo info) {
-        VsanConnection live = connections.get(info.getId());
+        Connection live = connections.get(info.getId());
         if (live != null) {
             live.update(info);
         } else {
@@ -104,7 +104,7 @@ public class ConnectionRepository implements ApplicationContextAware, Initializi
      */
     @Override
     public void connectionRemoved(ConnectionInfo info) {
-        VsanConnection live = connections.remove(info.getId());
+        Connection live = connections.remove(info.getId());
         if (live != null) {
             live.destroy();
         }

@@ -26,12 +26,6 @@
       <vsan.version>${project.version}</vsan.version>
       <maven.plugin.compiler>2.3.2</maven.plugin.compiler>
    </properties>
-   <!--modules>
-      <module>vimVersions</module>
-      <module>vimVmodl</module>
-      <module>vsanVersions</module>
-      <module>vsanVmodl</module>
-   </modules-->
    <build>
       <plugins>
          <plugin>

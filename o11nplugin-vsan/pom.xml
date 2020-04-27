@@ -29,11 +29,6 @@
             <version>${project.version}</version>
             <type>package</type>
         </dependency>
-        <!--dependency>
-	   <groupId>com.vmware.vlsi</groupId>
-	   <artifactId>vsan-vmodl</artifactId>
-	   <version>${vlsi.version}</version>
-        </dependency-->
     </dependencies>
 
     <build>

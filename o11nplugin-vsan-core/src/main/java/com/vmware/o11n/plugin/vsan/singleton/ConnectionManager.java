@@ -7,6 +7,7 @@ import org.springframework.util.Assert;
 
 import com.vmware.o11n.plugin.vsan.config.ConnectionPersister;
 import com.vmware.o11n.plugin.vsan.model.ConnectionInfo;
+import com.vmware.o11n.plugin.vsan.model.Connection;
 import com.vmware.o11n.plugin.sdk.spring.platform.GlobalPluginNotificationHandler;
 
 /**
@@ -37,7 +38,7 @@ public class ConnectionManager {
      * @param password vCenter password
      * @return the ID of the newly created connection
      */
-    public String save(String vcHost, int vcPort, String sslThumbPrint,
+    public String registerVsanConnection(String vcHost, int vcPort, String sslThumbPrint,
           String username, String password) {
         Assert.notNull(vcHost, "vCenter host cannot be null.");
         Assert.isTrue(vcPort > 0, "vCenter port needs to be a positive number.");
@@ -56,6 +57,20 @@ public class ConnectionManager {
 
         // Return the ID of the newly created connection
         return info.getId().toString();
+    }
+    
+    /**
+     * Removes a vSAN connection
+     * @param connection the vSAN connection
+     */
+    public void unregisterVsanConnection(Connection connection) {
+        Assert.notNull(connection, "vSAN connection cannot be null.");
+
+        // Delete the connection through the persister
+        persister.delete(connection.getConnectionInfo());
+
+        // Invalidate all elements of the vSAN inventory
+        notificationHandler.notifyElementsInvalidate();
     }
 
 }
