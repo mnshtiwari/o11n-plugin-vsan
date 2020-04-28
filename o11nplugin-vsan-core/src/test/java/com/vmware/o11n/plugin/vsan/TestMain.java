@@ -4,6 +4,7 @@
 
 package com.vmware.o11n.plugin.vsan;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
 
 import com.vmware.o11n.plugin.vsan.model.Connection;

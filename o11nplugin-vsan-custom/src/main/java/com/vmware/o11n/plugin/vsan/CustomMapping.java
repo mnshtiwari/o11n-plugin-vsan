@@ -1,5 +1,6 @@
 package com.vmware.o11n.plugin.vsan;
 
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,31 +19,24 @@ import com.vmware.vim.vmomi.core.types.VmodlType;
 import com.vmware.vim.vmomi.core.types.VmodlType.Kind;
 import com.vmware.vim.vmomi.core.types.VmodlTypeMap;
 
-import com.vmware.vim.vsan.binding.vim.cluster.VsanCapability;
-import com.vmware.vim.vsan.binding.vim.cluster.VsanCapabilitySystem;
-
 public class CustomMapping extends AbstractMapping {
    private final MethodRenamePolicy renamer = new TaskMethodRenamer();
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void define() {
-    	
-    	//convertWellKnownTypes();
+   @SuppressWarnings("unchecked")
+   @Override
+   public void define() {
+      //convertWellKnownTypes();
     	
     	singleton(ConnectionManager.class);
-    	
     	wrap(Connection.class).
          andFind().
          using(VsanConnectionFinder.class).
          withIcon("folder.png");
 
-    	/*
     	String vimPackage = "com.vmware.vim.binding.vim";
     	String vsanPackage = "com.vmware.vim.vsan.binding.vim";
     	String[] vmodlContextPackage = new String[] {vimPackage, vsanPackage};
     	VmodlContext vmodlContext = initVmodlContext(vmodlContextPackage);
-
       VmodlTypeMap vmodlTypeMap = vmodlContext.getVmodlTypeMap();
       Set<VmodlType> uniqueTypes = new HashSet<>();
       uniqueTypes.addAll(vmodlTypeMap.getVmodlTypes());
@@ -51,45 +45,50 @@ public class CustomMapping extends AbstractMapping {
 
       Set<Class<?>> excludeClasses = new HashSet<>();
       for (VmodlType type : uniqueTypes) {
-          String wsdlName = type.getWsdlName();
+         String wsdlName = type.getWsdlName();
+         Class<?> clazz = loadClass(type.getTypeName());
 
-          Class<?> clazz = loadClass(type.getTypeName());
-          
-          // Exclude wrapping VIM vmodl types
-          if (clazz.getName().contains(vimPackage)) {
-             continue;
-          }
-          if (!excludeClasses.contains(clazz)) {
+         // Exclude wrapping VIM vmodl types
+         if (clazz.getName().contains(vimPackage) ||
+            clazz.getName().contains("com.vmware.vim.binding.vmodl")) {
+            continue;
+         }
 
-              String sdkName = wsdlName;
-              if (type.getKind() == Kind.MANAGED_OBJECT
-                    || type.getKind() == Kind.DATA_OBJECT
-                    || type.getKind() == Kind.FAULT) {
+         // TODO: Temp fix to exclude types not directly extending DynamicData
+         if (type.getKind() == Kind.DATA_OBJECT) {
+            Type[] supTypes = clazz.getGenericInterfaces();
+            if (supTypes != null &&
+                  !supTypes[0].getTypeName().equalsIgnoreCase(
+                        "com.vmware.vim.binding.vmodl.DynamicData")) {
+               continue;
+            }
+         }
 
-                  WrapDescriptor<?> wrapper;
-                  wrapper = wrap(clazz).as(sdkName).rename(renamer);
-                  if (type.getKind() == Kind.MANAGED_OBJECT) {
-                  } else {
-                      wrapper.propagateRootId();
-                      if (type.getKind() == Kind.FAULT) {
-                          wrapper.hiding("printStackTrace");
-                      }
+         if (!excludeClasses.contains(clazz)) {
+            String sdkName = wsdlName;
+            if (type.getKind() == Kind.MANAGED_OBJECT ||
+                  type.getKind() == Kind.DATA_OBJECT ||
+                  type.getKind() == Kind.FAULT) {
+
+               WrapDescriptor<?> wrapper;
+               wrapper = wrap(clazz).as(sdkName).rename(renamer);
+               if (type.getKind() == Kind.MANAGED_OBJECT) {
+               } else {
+                  wrapper.propagateRootId();
+                  if (type.getKind() == Kind.FAULT) {
+                     wrapper.hiding("printStackTrace");
                   }
-                  // reflectively customize the wrapping
-                  customizer.tryCustomize(wrapper, clazz);
-              } else if (type.getKind() == Kind.ENUM) {
-                  enumerate((Class<Enum>) clazz).as(sdkName);
-              }
+               }
+               // reflectively customize the wrapping
+               customizer.tryCustomize(wrapper, clazz);
+            } else if (type.getKind() == Kind.ENUM) {
+               enumerate((Class<Enum>) clazz).as(sdkName);
+            }
 
-          }
-      }*/
+         }
+      }
 
-    	WrapperCustomizer customizer = new WrapperCustomizer(this);
-    	WrapDescriptor<?> wrapper1 = wrap(VsanCapability.class).as("VsanCapability").rename(renamer);
-      customizer.tryCustomize(wrapper1, VsanCapability.class);
-      WrapDescriptor<?> wrapper2 = wrap(VsanCapabilitySystem.class).as("VsanCapabilitySystem").rename(renamer);
-      customizer.tryCustomize(wrapper2, VsanCapabilitySystem.class);
-      include(ManagedObjectReference.class);
+    	include(ManagedObjectReference.class);
 
     	relateRoot().
          to(Connection.class).
