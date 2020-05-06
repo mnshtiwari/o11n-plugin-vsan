@@ -12,9 +12,11 @@ import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import static com.vmware.vim.vsan.binding.vsan.version.internal.versions.VSAN_VERSION_NEWEST;
-import static com.vmware.vim.binding.vim.version.internal.versions.VIM_VERSION_NEWEST;
+import static com.vmware.vim.vsan.binding.vsan.version.versions.VSAN_VERSION_NEWEST;
+import static com.vmware.vim.binding.vim.version.versions.VIM_VERSION_NEWEST;
 
 import com.google.common.base.Preconditions;
 import com.vmware.vim.binding.vim.fault.InvalidLocale;
@@ -32,14 +34,14 @@ import com.vmware.vim.vmomi.client.http.ThumbprintVerifier;
 import com.vmware.vim.vmomi.client.http.impl.ClientFactory;
 import com.vmware.vim.vmomi.core.types.VmodlContext;
 
-
-public class VsanConnectionUtil {
+@Component
+public class VsanClientFactory {
    private static final String SERVICE_INSTANCE = "ServiceInstance";
-   private static final String[] VMODL_CONTEXT =
-         new String[] {"com.vmware.vim.binding.vim", "com.vmware.vim.vsan.binding.vim"};
-   private static final Logger logger = LoggerFactory.getLogger(VsanConnectionUtil.class);
+   private static final Logger logger = LoggerFactory.getLogger(VsanClientFactory.class);
    
-   public static Client createVsanClient(String vcHost, String port, String sslThumbprint,
+   public static VmodlContext vmodlContext = null;
+   
+   public Client createVsanClient(String vcHost, String port, String sslThumbprint,
          String username, String password) {
       try {
          Client vcVmomiClient = createVcVmomiClient(vcHost, port, sslThumbprint);
@@ -50,20 +52,20 @@ public class VsanConnectionUtil {
          setSessionInClient(vsanVmomiClient, vcSession.getId());
          return vsanVmomiClient;
       } catch (Exception ex) {
-         String msg = "Error creating vSAN client.";
+         String msg = "[createVsanClient] Error creating vSAN client.";
          logger.error(msg);
          throw new RuntimeException(msg, ex);
       }
    }
    
-   private static HttpClientConfiguration createConfiguration(String sslThumbprint) {
+   private HttpClientConfiguration createConfiguration(String sslThumbprint) {
       HttpClientConfiguration clientConfig = HttpClientConfiguration.Factory.newInstance();
       clientConfig.setHttpConfiguration(getHttpConfig(sslThumbprint));
       clientConfig.setExecutor(Executors.newFixedThreadPool(1));
       return clientConfig;
    }
    
-   private static HttpConfiguration getHttpConfig(final String sslThumbprint) {
+   private HttpConfiguration getHttpConfig(final String sslThumbprint) {
       HttpConfiguration httpConfig = HttpConfiguration.Factory.newInstance();
       httpConfig.setTimeoutMs(1000);
       httpConfig.setConnectTimeoutMs(5000);
@@ -82,16 +84,8 @@ public class VsanConnectionUtil {
       });
       return httpConfig;
    }
-
-   private synchronized static VmodlContext initVmodlContext(String[] context) {
-      try {
-         return VmodlContext.getContext();
-      } catch (IllegalStateException ex) {
-         return VmodlContext.initContext(context);
-      }
-   }
    
-   private static void connect(Client vcClient, String username, String password)
+   private void connect(Client vcClient, String username, String password)
          throws InvalidLogin, InvalidLocale {
       ManagedObjectReference svcRef = new ManagedObjectReference(SERVICE_INSTANCE,
             SERVICE_INSTANCE);
@@ -104,41 +98,65 @@ public class VsanConnectionUtil {
       sessionMgr.login(username, password, "en");
    }
    
-   private static Client createVcVmomiClient(String vcHost, String vcPort,
+   private Client createVcVmomiClient(String vcHost, String vcPort,
          String sslThumbPrint) throws URISyntaxException {
       URI uri;
       try {
          uri = new URI("https://" + vcHost + ":" + vcPort + "/sdk");
       } catch (URISyntaxException e) {
+         logger.error("[createVcVmomiClient] Bad URL. Reason: {}", e.getReason());
          throw e;
       }
-
+      
+      VmodlContext vmContext = getVmodlContext();
+      String connUtilCL = VsanClientFactory.class.getClassLoader().toString();
+      String vimCL = VIM_VERSION_NEWEST.getClassLoader().toString();
+      String moCL = ManagedObjectReference.class.getClassLoader().toString();
+      String vsanCL = VSAN_VERSION_NEWEST.getClassLoader().toString();
+      String path = VIM_VERSION_NEWEST.getProtectionDomain().getCodeSource().getLocation().getPath();
+      String latestVimVersionName = VIM_VERSION_NEWEST.getSimpleName();
       return ClientFactory.createClient(uri, VIM_VERSION_NEWEST,
-            createConfiguration(sslThumbPrint), initVmodlContext(VMODL_CONTEXT));
+            createConfiguration(sslThumbPrint), vmContext);
    }
    
-   private static Client createVsanVmomiClient(String vcHost, String vcPort,
+   private Client createVsanVmomiClient(String vcHost, String vcPort,
          String sslThumbPrint) throws URISyntaxException {
       URI uri;
       try {
          uri = new URI("https://" + vcHost + ":" + vcPort + "/vsanHealth");
       } catch (URISyntaxException e) {
+         logger.error("[createVsanVmomiClient] Bad URL. Reason: {}", e.getReason());
          throw e;
       }
 
       return ClientFactory.createClient(uri, VSAN_VERSION_NEWEST,
-            createConfiguration(sslThumbPrint), initVmodlContext(VMODL_CONTEXT));
+            createConfiguration(sslThumbPrint), getVmodlContext());
    }
    
-   private static Session getVcSession(Client vcClient) {
+   private Session getVcSession(Client vcClient) {
       ProtocolBinding pb = vcClient.getBinding();
       return pb != null ? pb.getSession() : null;
    }
    
-   private static void setSessionInClient(Client client, String sessionId) {
+   private void setSessionInClient(Client client, String sessionId) {
       Preconditions.checkNotNull(sessionId, "sessionId");
       Preconditions.checkNotNull(client, "client");
       Session session = client.getBinding().createSession(sessionId);
       client.getBinding().setSession(session);
+   }
+   
+   private static synchronized VmodlContext getVmodlContext() {
+      if (vmodlContext == null) {
+         try {
+            vmodlContext = VmodlContext.createContext(
+                  new String[] {
+                        "com.vmware.vim.binding.vim",
+                        "com.vmware.vim.vsan.binding.vim"});
+         } catch (Exception ex) {
+            logger.error("[initVmodlContext] Failed to initialize vSAN vmodl context");
+            throw ex;
+         }
+      }
+      return vmodlContext;
    }
 }

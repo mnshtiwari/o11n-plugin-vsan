@@ -4,7 +4,6 @@
 
 package com.vmware.o11n.plugin.vsan;
 
-import java.lang.reflect.Type;
 import java.util.Arrays;
 
 import com.vmware.o11n.plugin.vsan.model.Connection;
@@ -19,7 +18,7 @@ public class TestMain {
 
    public static void main(String[] args) throws Exception {
       System.out.println("Test Main class");
-      /*
+      
       String vcHost = "sc1-10-182-13-192.eng.vmware.com";
       int port = 443;
       String sslThumbprint = "CE:52:EC:83:18:BB:A8:AE:6B:E4:D5:48:1E:94:E7:C4:F3:CA:9E:67";
@@ -27,7 +26,7 @@ public class TestMain {
       String password = "Admin!23";
       ConnectionInfo connectionInfo = new ConnectionInfo(
             vcHost, port, sslThumbprint, username, password);
-      VsanConnection vsanConnection = new VsanConnection(connectionInfo);
+      Connection vsanConnection = new Connection(connectionInfo);
       
       VsanCapabilitySystem capabilitySystem = vsanConnection.getVsanCapabilitySystem();
       VsanCapability[] capabilities = capabilitySystem.getCapabilities(null);
@@ -42,7 +41,6 @@ public class TestMain {
       System.out.println();
       System.out.println("Dedup Enabled:");
       System.out.println(configInfo.getDataEfficiencyConfig().isDedupEnabled());
-      */
    }
 
 }

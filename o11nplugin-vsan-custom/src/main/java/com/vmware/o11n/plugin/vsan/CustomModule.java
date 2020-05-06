@@ -1,7 +1,5 @@
 package com.vmware.o11n.plugin.vsan;
 
-
-
 import java.util.Collections;
 
 import com.google.inject.AbstractModule;
@@ -29,5 +27,6 @@ public class CustomModule extends AbstractModule {
         plugin.setName("Vsan");
         plugin.setPackages(Collections.singletonList("o11nplugin-vsan-package-${project.version}.package"));
         plugin.setAdaptorClassName(com.vmware.o11n.plugin.vsan.VsanPluginAdaptor.class);
+        plugin.setClassloaderParent("common");
     }
 }

@@ -31,4 +31,6 @@
     </bean>
 
     <bean class="com.vmware.o11n.plugin.vsan.VsanPluginFactory" autowire-candidate="false" scope="prototype" />
+    
+    <task:executor id="taskExecutor" rejection-policy="ABORT" pool-size="25-100" queue-capacity="5000"/>
 </beans>
