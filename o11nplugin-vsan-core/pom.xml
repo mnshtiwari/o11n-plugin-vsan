@@ -26,11 +26,6 @@
          <type>pom</type>
       </dependency>
       <dependency>
-         <groupId>com.google.guava</groupId>
-         <artifactId>guava</artifactId>
-         <version>r05</version>
-      </dependency>
-      <dependency>
          <groupId>com.vmware.vlsi</groupId>
          <artifactId>vsan-vmodl</artifactId>
          <version>${vlsi.version}</version>

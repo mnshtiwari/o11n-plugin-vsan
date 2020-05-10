@@ -1,6 +1,5 @@
 package com.vmware.o11n.plugin.vsan;
 
-import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,16 +51,6 @@ public class CustomMapping extends AbstractMapping {
          if (clazz.getName().contains(vimPackage) ||
             clazz.getName().contains("com.vmware.vim.binding.vmodl")) {
             continue;
-         }
-
-         // TODO: Temp fix to exclude types not directly extending DynamicData
-         if (type.getKind() == Kind.DATA_OBJECT) {
-            Type[] supTypes = clazz.getGenericInterfaces();
-            if (supTypes != null &&
-                  !supTypes[0].getTypeName().equalsIgnoreCase(
-                        "com.vmware.vim.binding.vmodl.DynamicData")) {
-               continue;
-            }
          }
 
          if (!excludeClasses.contains(clazz)) {
